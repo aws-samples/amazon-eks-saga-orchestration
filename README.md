@@ -1,18 +1,11 @@
-## My Project
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. // SPDX-License-Identifier: CC-BY-SA-4.0
 
-TODO: Fill this README out!
+# Introduction
 
-Be sure to:
+This repository has installation and clean up instructions for implementing **Saga Orchestration** pattern with Amazon EKS.
 
-* Change the title in this README
-* Edit your repository description on GitHub
+## Usage
 
-## Security
+To install the Orchestration pattern, see instructions [here.](orchestration/install.md)
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
-
-## License Summary
-
-The documentation is made available under the Creative Commons Attribution-ShareAlike 4.0 International License. See the LICENSE file.
-
-The sample code within this documentation is made available under the MIT-0 license. See the LICENSE-SAMPLECODE file.
+To remove the Orchestration pattern, see instructions [here.](orchestration/cleanup.md)
