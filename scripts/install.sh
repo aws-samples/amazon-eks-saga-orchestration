@@ -1,9 +1,6 @@
 #!/bin/bash
 set -ex
 
-## Set PATH environment variable
-export PATH=$PATH:$HOME/bin
-
 ## AWS set-up
 
 git clone ${GIT_URL}/amazon-eks-saga-orchestration-aws
