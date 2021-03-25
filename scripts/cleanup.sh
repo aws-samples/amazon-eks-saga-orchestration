@@ -1,5 +1,6 @@
 #!/bin/bash
 set -ex
+cd $HOME
 
 ## Base tools
 sudo yum update -y && sudo yum install -y mysql
@@ -18,14 +19,16 @@ kubectl version --client=true
 ### eksctl
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 sudo mv /tmp/eksctl /usr/local/bin
+eksctl version
 
 ### helm
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | /bin/bash -
+helm version
 
 ## Detach IAM policy
 echo 'Detaching IAM policy for CloudWatch Agent'
 EKS_CLUSTER=eks-saga-orchestration
-STACK_NAME=eksctl-${EKS_CLUSTER}-nodegroup-ng-db
+STACK_NAME=eksctl-${EKS_CLUSTER}-cluster
 ROLE_NAME=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME | jq -r '.StackResources[] | select(.ResourceType=="AWS::IAM::Role") | .PhysicalResourceId')
 
 ## Remove cluster objects, EKS cluster and ELB

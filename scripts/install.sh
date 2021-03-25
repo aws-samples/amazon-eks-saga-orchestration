@@ -1,5 +1,6 @@
 #!/bin/bash
 set -ex
+cd $HOME
 
 ## AWS set-up
 
