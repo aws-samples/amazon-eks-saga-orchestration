@@ -1,6 +1,9 @@
 #!/bin/bash
 set -ex
 
+## Set PATH environment variable
+export PATH=$PATH:$HOME/bin
+
 ## AWS set-up
 
 git clone ${GIT_URL}/amazon-eks-saga-orchestration-aws
@@ -142,6 +145,8 @@ sed -e 's/regionId/'"${REGION_ID}"'/g' \
 cd
 
 ## Set retention period for log groups of Container Insights
+sleep 30
+
 aws logs put-retention-policy --log-group-name /aws/containerinsights/${EKS_CLUSTER}/application --retention-in-days 1
 aws logs put-retention-policy --log-group-name /aws/containerinsights/${EKS_CLUSTER}/dataplane --retention-in-days 1
 aws logs put-retention-policy --log-group-name /aws/containerinsights/${EKS_CLUSTER}/host --retention-in-days 1

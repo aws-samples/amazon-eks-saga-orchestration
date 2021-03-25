@@ -4,7 +4,7 @@ set -ex
 
 ### Tools - git and mysql client
 sudo yum-config-manager --setopt="docker-ce-stable.baseurl=https://download.docker.com/linux/centos/7/x86_64/stable" --save
-sudo yum update -y && sudo yum install -y git mysql docker && sudo systemctl start docker
+sudo yum update -y && sudo yum install -y mysql docker && sudo systemctl start docker
 
 ### jq - yum install jq1.5 whereas, the walk command requires jq1.6
 wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O jq
@@ -15,7 +15,6 @@ sudo mv jq /usr/local/bin
 mkdir bin && cd bin
 curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl
 chmod +x kubectl
-export PATH=$PATH:$HOME/bin
 cd
 
 ### eksctl

@@ -7,15 +7,12 @@ This document describes the steps to install the demonstration of Saga - Orchest
 - [Introduction](#introduction)
   - [Pre-requisites](#pre-requisites)
   - [Installation](#installation)
-    - [Automated installation](#automated-installation)
 
 ## Pre-requisites
 
 An AWS account with full admininstrator access - _not_ the root account - should be used.
 
 ## Installation
-
-### Automated installation
 
 1. Launch a EC2 instance with the Amazon Linux 2 AMI with the following guidelines.
    1. Instance type could be as small as `t2.micro`.
@@ -25,6 +22,7 @@ An AWS account with full admininstrator access - _not_ the root account - should
 2. Once the instance is launched, connect to it with `ssh` and run the following commands.
 
 ```bash
+sudo yum update -y && sudo yum install -y git
 git clone https://github.com/aws-samples/amazon-eks-saga-orchestration
 cd amazon-eks-saga-orchestration/scripts
 ./prereqs.sh

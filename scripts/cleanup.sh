@@ -2,7 +2,7 @@
 set -ex
 
 ## Base tools
-sudo yum update -y && sudo yum install -y git mysql
+sudo yum update -y && sudo yum install -y mysql
 
 ### jq - yum install jq1.5 whereas, the walk command requires jq1.6
 wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O jq
@@ -10,6 +10,7 @@ chmod +x jq
 sudo mv jq /usr/local/bin
 
 ### kubectl
+cd
 mkdir bin && cd bin
 curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl
 chmod +x kubectl
@@ -63,3 +64,5 @@ aws logs delete-log-group --log-group-name /aws/containerinsights/${EKS_CLUSTER}
 aws logs delete-log-group --log-group-name /aws/containerinsights/${EKS_CLUSTER}/dataplane
 aws logs delete-log-group --log-group-name /aws/containerinsights/${EKS_CLUSTER}/host
 aws logs delete-log-group --log-group-name /aws/containerinsights/${EKS_CLUSTER}/performance
+
+echo 'All done!'
