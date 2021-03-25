@@ -51,7 +51,7 @@ sed -e 's/regionId/'"${REGION_ID}"'/g' \
   cluster.yaml | eksctl create cluster -f -
 
 ### Apply CloudWatch policy
-STACK_NAME=eksctl-${EKS_CLUSTER}-nodegroup-ng-db
+STACK_NAME=eksctl-${EKS_CLUSTER}-cluster
 ROLE_NAME=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME | jq -r '.StackResources[] | select(.ResourceType=="AWS::IAM::Role") | .PhysicalResourceId')
 aws iam attach-role-policy --role-name $ROLE_NAME --policy-arn arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
 
