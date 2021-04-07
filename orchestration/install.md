@@ -29,7 +29,7 @@ cd amazon-eks-saga-orchestration/scripts
 logout
 ```
 
-3. Your connection will be lost after running the above commands. This is required so that your user (`ec2-user`) is added to the `docker` group for running various `docker` commands. Therefore, connect back with `ssh` and follow the steps below.
+3. Your connection will be lost after `logout` command. This is required so that your user (`ec2-user`) is added to the `docker` group for running various `docker` commands. Therefore, connect back with `ssh` and follow the steps below.
 4. Configure `aws` CLI with `aws configure` for an IAM user that has administrator access.
 5. Define the following environment variables.
 
