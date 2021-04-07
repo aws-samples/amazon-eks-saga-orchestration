@@ -51,11 +51,6 @@ sed -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/sqs-policy/eks-saga-sqs-orche-policy/g' \
   cluster.yaml | eksctl create cluster -f -
 
-### Apply CloudWatch policy
-STACK_NAME=eksctl-${EKS_CLUSTER}-cluster
-ROLE_NAME=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME | jq -r '.StackResources[] | select(.ResourceType=="AWS::IAM::Role") | .PhysicalResourceId')
-aws iam attach-role-policy --role-name $ROLE_NAME --policy-arn arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
-
 ### Set log group retention
 aws logs put-retention-policy --log-group-name /aws/eks/${EKS_CLUSTER}/cluster --retention-in-days 1
 
@@ -63,6 +58,7 @@ aws logs put-retention-policy --log-group-name /aws/eks/${EKS_CLUSTER}/cluster -
 export EKS_VPC=`aws eks describe-cluster --name ${EKS_CLUSTER} --query 'cluster.resourcesVpcConfig.vpcId' --output text`
 export RDS_VPC=`aws rds describe-db-instances --db-instance-identifier ${RDS_DB_ID} --query 'DBInstances[0].DBSubnetGroup.VpcId' --output text`
 cd ../scripts
+STACK_NAME=eksctl-${EKS_CLUSTER}-cluster
 ./rds.sh ${STACK_NAME} ${EKS_VPC} ${RDS_VPC} ${RDS_DB_ID}
 
 ### Load balancer set-up
@@ -129,6 +125,7 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
 sed -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
   audit.yaml | kubectl -n eks-saga create -f -
+cd
 
 ### Trail microservice
 git clone ${GIT_URL}/amazon-eks-saga-orchestration-trail
