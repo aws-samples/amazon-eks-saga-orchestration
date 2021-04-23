@@ -142,7 +142,42 @@ cd
 ## Set retention period for log groups of Container Insights
 sleep 30
 
-aws logs put-retention-policy --log-group-name /aws/containerinsights/${EKS_CLUSTER}/application --retention-in-days 1
-aws logs put-retention-policy --log-group-name /aws/containerinsights/${EKS_CLUSTER}/dataplane --retention-in-days 1
-aws logs put-retention-policy --log-group-name /aws/containerinsights/${EKS_CLUSTER}/host --retention-in-days 1
-aws logs put-retention-policy --log-group-name /aws/containerinsights/${EKS_CLUSTER}/performance --retention-in-days 1
+LOG_GROUP_NAME=/aws/containerinsights/${EKS_CLUSTER}/application
+LOG_GROUP_ARN=`aws logs describe-log-groups --log-group-name-prefix ${LOG_GROUP_NAME} --query 'logGroups[0].arn' --output text`
+if [ ${LOG_GROUP_ARN} == 'None' ]
+then
+  echo "${LOG_GROUP_NAME} should be available after some time. Please set retention period manually to 1 day to avoid incurring charges."
+else
+  aws logs put-retention-policy --log-group-name ${LOG_GROUP_NAME} --retention-in-days 1
+  echo "Retention period for ${LOG_GROUP_NAME} set to 1 day."
+fi 
+
+LOG_GROUP_NAME=/aws/containerinsights/${EKS_CLUSTER}/dataplane
+LOG_GROUP_ARN=`aws logs describe-log-groups --log-group-name-prefix ${LOG_GROUP_NAME} --query 'logGroups[0].arn' --output text`
+if [ ${LOG_GROUP_ARN} == 'None' ]
+then
+  echo "${LOG_GROUP_NAME} should be available after some time. Please set retention period manually to 1 day to avoid incurring charges."
+else
+  aws logs put-retention-policy --log-group-name ${LOG_GROUP_NAME} --retention-in-days 1
+  echo "Retention period for ${LOG_GROUP_NAME} set to 1 day."
+fi 
+
+LOG_GROUP_NAME=/aws/containerinsights/${EKS_CLUSTER}/host
+LOG_GROUP_ARN=`aws logs describe-log-groups --log-group-name-prefix ${LOG_GROUP_NAME} --query 'logGroups[0].arn' --output text`
+if [ ${LOG_GROUP_ARN} == 'None' ]
+then
+  echo "${LOG_GROUP_NAME} should be available after some time. Please set retention period manually to 1 day to avoid incurring charges."
+else
+  aws logs put-retention-policy --log-group-name ${LOG_GROUP_NAME} --retention-in-days 1
+  echo "Retention period for ${LOG_GROUP_NAME} set to 1 day."
+fi
+
+LOG_GROUP_NAME=/aws/containerinsights/${EKS_CLUSTER}/performance
+LOG_GROUP_ARN=`aws logs describe-log-groups --log-group-name-prefix ${LOG_GROUP_NAME} --query 'logGroups[0].arn' --output text`
+if [ ${LOG_GROUP_ARN} == 'None' ]
+then
+  echo "${LOG_GROUP_NAME} should be available after some time. Please set retention period manually to 1 day to avoid incurring charges."
+else
+  aws logs put-retention-policy --log-group-name ${LOG_GROUP_NAME} --retention-in-days 1
+  echo "Retention period for ${LOG_GROUP_NAME} set to 1 day."
+fi 
