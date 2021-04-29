@@ -27,7 +27,7 @@ git clone ${GIT_URL}/amazon-eks-saga-orchestration-db
 PROJECT_HOME=${PWD}/amazon-eks-saga-orchestration-db
 # Change this password !!
 MYSQL_MASTER_PASSWORD='V3ry.Secure.Passw0rd'
-RDS_DB_ID=eks-saga-db
+RDS_DB_ID=eks-sagao-db
 source ${PROJECT_HOME}/scripts/db.sh
 source ${PROJECT_HOME}/scripts/ddl.sh
 
