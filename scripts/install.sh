@@ -27,7 +27,7 @@ git clone ${GIT_URL}/amazon-eks-saga-orchestration-db
 PROJECT_HOME=${PWD}/amazon-eks-saga-orchestration-db
 # Change this password !!
 MYSQL_MASTER_PASSWORD='V3ry.Secure.Passw0rd'
-RDS_DB_ID=eks-saga-db
+RDS_DB_ID=eks-sagao-db
 source ${PROJECT_HOME}/scripts/db.sh
 source ${PROJECT_HOME}/scripts/ddl.sh
 
@@ -40,10 +40,11 @@ cd
 
 ## Amazon EKS cluster set-up
 
+export EKS_CLUSTER=eks-saga-orchestration
+
 ### Cluster installation
 git clone ${GIT_URL}/amazon-eks-saga-orchestration-cluster
 cd amazon-eks-saga-orchestration-cluster/yaml
-EKS_CLUSTER=eks-saga-orchestration
 sed -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/eks-saga-demoType/'"${EKS_CLUSTER}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
