@@ -25,14 +25,9 @@ eksctl version
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | /bin/bash -
 helm version
 
-## Detach IAM policy
-echo 'Detaching IAM policy for CloudWatch Agent'
-EKS_CLUSTER=eks-saga-orchestration
-STACK_NAME=eksctl-${EKS_CLUSTER}-cluster
-ROLE_NAME=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME | jq -r '.StackResources[] | select(.ResourceType=="AWS::IAM::Role") | .PhysicalResourceId')
-
 ## Remove cluster objects, EKS cluster and ELB
 export RDS_DB_ID=eks-saga-db
+export EKS_CLUSTER=eks-saga-orchestration
 export EKS_VPC=`aws eks describe-cluster --name ${EKS_CLUSTER} --query 'cluster.resourcesVpcConfig.vpcId' --output text`
 export RDS_VPC=`aws rds describe-db-instances --db-instance-identifier ${RDS_DB_ID} --query 'DBInstances[0].DBSubnetGroup.VpcId' --output text`
 

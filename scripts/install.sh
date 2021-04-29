@@ -40,10 +40,11 @@ cd
 
 ## Amazon EKS cluster set-up
 
+export EKS_CLUSTER=eks-saga-orchestration
+
 ### Cluster installation
 git clone ${GIT_URL}/amazon-eks-saga-orchestration-cluster
 cd amazon-eks-saga-orchestration-cluster/yaml
-EKS_CLUSTER=eks-saga-orchestration
 sed -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/eks-saga-demoType/'"${EKS_CLUSTER}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
