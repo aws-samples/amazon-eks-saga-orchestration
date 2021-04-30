@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 cd $HOME
 
 ## Base tools
@@ -26,20 +26,26 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | /bi
 helm version
 
 ## Remove cluster objects, EKS cluster and ELB
-export RDS_DB_ID=eks-saga-db
+export RDS_DB_ID=eks-sagao-db
 export EKS_CLUSTER=eks-saga-orchestration
 export EKS_VPC=`aws eks describe-cluster --name ${EKS_CLUSTER} --query 'cluster.resourcesVpcConfig.vpcId' --output text`
 export RDS_VPC=`aws rds describe-db-instances --db-instance-identifier ${RDS_DB_ID} --query 'DBInstances[0].DBSubnetGroup.VpcId' --output text`
 
-aws eks update-kubeconfig --name ${EKS_CLUSTER}
+# aws eks update-kubeconfig --name ${EKS_CLUSTER}
 
+STACK_NAME=eksctl-${EKS_CLUSTER}-cluster
+if [ ! -d "$HOME/amazon-eks-saga-orchestration-cluster" ]; then
+  git clone ${GIT_URL}/amazon-eks-saga-orchestration-cluster
+fi
 git clone ${GIT_URL}/amazon-eks-saga-orchestration-cluster
 cd amazon-eks-saga-orchestration-cluster/scripts
 ./cleanup.sh ${STACK_NAME} ${ACCOUNT_ID} ${RDS_DB_ID} ${EKS_VPC} ${RDS_VPC} ${EKS_CLUSTER}
 cd
 
 ## Remove RDS
-git clone ${GIT_URL}/amazon-eks-saga-orchestration-db
+if [ ! -d "$HOME/amazon-eks-saga-orchestration-db" ]; then
+  git clone ${GIT_URL}/amazon-eks-saga-orchestration-db
+fi
 export PROJECT_HOME=${PWD}/amazon-eks-saga-orchestration-db
 # Use changed password !!
 export MYSQL_MASTER_PASSWORD='V3ry.Secure.Passw0rd'
@@ -47,8 +53,10 @@ source ${PROJECT_HOME}/scripts/drop.sh
 source ${PROJECT_HOME}/scripts/cleanup.sh ${ACCOUNT_ID} ${RDS_DB_ID}
 cd
 
-## Remove SNS-SQS, IAM and ECR
-git clone ${GIT_URL}/amazon-eks-saga-orchestration-aws
+## Remove SNS, SQS, IAM and ECR
+if [ ! -d "$HOME/amazon-eks-saga-orchestration-aws" ]; then
+  git clone ${GIT_URL}/amazon-eks-saga-orchestration-aws
+fi
 cd amazon-eks-saga-orchestration-aws/scripts
 ./cleanup.sh ${REGION_ID} ${ACCOUNT_ID} O
 ./ciam.sh ${ACCOUNT_ID} O

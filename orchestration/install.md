@@ -22,7 +22,7 @@ An AWS account with full admininstrator access - _not_ the root account - should
 2. Once the instance is launched, connect to it with `ssh` and run the following commands.
 
 ```bash
-sudo yum update -y && sudo yum install -y git
+cd
 git clone https://github.com/aws-samples/amazon-eks-saga-orchestration
 cd amazon-eks-saga-orchestration/scripts
 ./prereqs.sh
