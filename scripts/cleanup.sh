@@ -2,6 +2,15 @@
 set -e
 cd $HOME
 
+if [[ $# -ne 3 ]] ; then
+  echo 'USAGE: ./cleanup.sh regionId accountId gitUrl'
+  exit 1
+fi
+
+REGION_ID=$1
+ACCOUNT_ID=$2
+GIT_URL=$3
+
 ## Base tools
 sudo yum update -y && sudo yum install -y mysql
 
@@ -37,7 +46,6 @@ STACK_NAME=eksctl-${EKS_CLUSTER}-cluster
 if [ ! -d "$HOME/amazon-eks-saga-orchestration-cluster" ]; then
   git clone ${GIT_URL}/amazon-eks-saga-orchestration-cluster
 fi
-git clone ${GIT_URL}/amazon-eks-saga-orchestration-cluster
 cd amazon-eks-saga-orchestration-cluster/scripts
 ./cleanup.sh ${STACK_NAME} ${ACCOUNT_ID} ${RDS_DB_ID} ${EKS_VPC} ${RDS_VPC} ${EKS_CLUSTER}
 cd
