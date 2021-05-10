@@ -14,36 +14,21 @@ An AWS account with full admininstrator access - _not_ the root account - should
 
 ## Clean-up
 
-1. Launch a EC2 instance with the Amazon Linux 2 AMI with the following guidelines.
-   1. Instance type could be as small as `t2.micro`.
-   2. **Strongly recommend** to use Spot instance to reduce costs.
-   3. Launch in the same region where the cluster is to be launched.
-   4. Launch the instance with public IP address with port `22` opened for `ssh` access.
-2. Once the instance is launched, connect to it with `ssh` and run the following commands.
+1. Launch a Cloud9 workspace as described [here](https://www.eksworkshop.com/020_prerequisites/workspace/). You may choose any name for the workshop.
+2. Increase the disk size of the workspace as described [here](https://www.eksworkshop.com/020_prerequisites/workspace/#increase-the-disk-size-on-the-cloud9-instance).
+3. Disable temporary credentials as described [here](https://www.eksworkshop.com/020_prerequisites/workspaceiam/).
+4. Create new IAM role for your workspave as described [here](https://www.eksworkshop.com/020_prerequisites/iamrole/).
+5. Attach new IAM role for your workspave as described [here](https://www.eksworkshop.com/020_prerequisites/ec2instance/).
+6. Change `regionId` and `accountId` as applicable in the commands below. Do **NOT** change the third argument (`https://github.com/aws-samples`). Open terminal and run the commands.
 
 ```bash
-sudo yum update -y && sudo yum install -y git
+cd
 git clone https://github.com/aws-samples/amazon-eks-saga-orchestration
-```
-
-3. Configure `aws` CLI with `aws configure` for an IAM user that has administrator access.
-4. Define the following environment variables.
-
-```bash
-export REGION_ID=<preferred region ID>
-export ACCOUNT_ID=<your account ID>
-# Do not change this.
-export GIT_URL=https://github.com/aws-samples
-```
-
-5. Run the following commands to remove the installation.
-
-```bash
 cd amazon-eks-saga-orchestration/scripts
-./cleanup.sh
+./cleanup.sh regionId accountId https://github.com/aws-samples
 ```
 
-6. Terminate EC2 instance.
+7. Terminate your Cloud9 instance.
 
 You can also browse the instructions for each repository as listed below.
 

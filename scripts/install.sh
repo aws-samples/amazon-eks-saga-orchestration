@@ -51,6 +51,7 @@ sudo mv /usr/local/bin/aws /usr/bin/aws
 aws configure set default.region ${REGION_ID}
 
 ## Saga Orchestration installation
+echo 'Installing EKS Saga Orchestration demo.'
 cd $HOME
 
 ## AWS set-up
@@ -241,5 +242,15 @@ else
   aws logs put-retention-policy --log-group-name ${LOG_GROUP_NAME} --retention-in-days 1
   echo "Retention period for ${LOG_GROUP_NAME} set to 1 day."
 fi 
+
+echo 'Cleaning up folders'
+rm -rf $HOME/amazon-eks-saga-orchestration-audit
+rm -rf $HOME/amazon-eks-saga-orchestration-aws
+rm -rf $HOME/amazon-eks-saga-orchestration-cluster
+rm -rf $HOME/amazon-eks-saga-orchestration-db
+rm -rf $HOME/amazon-eks-saga-orchestration-inventory
+rm -rf $HOME/amazon-eks-saga-orchestration-orchestrator
+rm -rf $HOME/amazon-eks-saga-orchestration-orders
+rm -rf $HOME/amazon-eks-saga-orchestration-trail
 
 echo 'All done!'

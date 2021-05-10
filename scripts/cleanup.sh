@@ -40,7 +40,7 @@ export EKS_CLUSTER=eks-saga-orchestration
 export EKS_VPC=`aws eks describe-cluster --name ${EKS_CLUSTER} --query 'cluster.resourcesVpcConfig.vpcId' --output text`
 export RDS_VPC=`aws rds describe-db-instances --db-instance-identifier ${RDS_DB_ID} --query 'DBInstances[0].DBSubnetGroup.VpcId' --output text`
 
-# aws eks update-kubeconfig --name ${EKS_CLUSTER}
+echo 'Removing EKS Saga Orchestration demo.'
 
 STACK_NAME=eksctl-${EKS_CLUSTER}-cluster
 if [ ! -d "$HOME/amazon-eks-saga-orchestration-cluster" ]; then
@@ -76,5 +76,10 @@ aws logs delete-log-group --log-group-name /aws/containerinsights/${EKS_CLUSTER}
 aws logs delete-log-group --log-group-name /aws/containerinsights/${EKS_CLUSTER}/dataplane
 aws logs delete-log-group --log-group-name /aws/containerinsights/${EKS_CLUSTER}/host
 aws logs delete-log-group --log-group-name /aws/containerinsights/${EKS_CLUSTER}/performance
+
+echo 'Cleaning up folders'
+rm -rf $HOME/amazon-eks-saga-orchestration-aws
+rm -rf $HOME/amazon-eks-saga-orchestration-cluster
+rm -rf $HOME/amazon-eks-saga-orchestration-db
 
 echo 'All done!'
