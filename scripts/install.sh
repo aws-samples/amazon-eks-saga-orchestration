@@ -132,6 +132,10 @@ cd
 
 ## Deploy microservices
 
+### Sleeping 10s so that Ingress object could be created.
+### See https://github.com/kubernetes-sigs/aws-load-balancer-controller/issues/2013
+sleep 10
+
 ### Orders microservice
 echo 'Deploying Orders microservice'
 git clone ${GIT_URL}/amazon-eks-saga-orchestration-orders
