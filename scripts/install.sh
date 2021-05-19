@@ -132,10 +132,6 @@ cd
 
 ## Deploy microservices
 
-### Sleeping 10s so that Ingress object could be created.
-### See https://github.com/kubernetes-sigs/aws-load-balancer-controller/issues/2013
-sleep 10
-
 ### Orders microservice
 echo 'Deploying Orders microservice'
 git clone ${GIT_URL}/amazon-eks-saga-orchestration-orders
@@ -145,9 +141,12 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
   -e 's/dbEndpoint/'"${DB_ENDPOINT}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
+yq r -d0 orders.yaml >> o.yaml
+echo '---' >> o.yaml
+yq r -d1 orders.yaml >> o.yaml
 sed -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  orders.yaml | kubectl -n eks-saga create -f -
+  o.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Inventory microservice
@@ -159,9 +158,12 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
   -e 's/dbEndpoint/'"${DB_ENDPOINT}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
+yq r -d0 inventory.yaml >> i.yaml
+echo '---' >> i.yaml
+yq r -d1 inventory.yaml >> i.yaml
 sed -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  inventory.yaml | kubectl -n eks-saga create -f -
+  i.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Orchestrator microservice
@@ -172,9 +174,12 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
+yq r -d0 orchestrator.yaml >> o.yaml
+echo '---' >> o.yaml
+yq r -d1 orchestrator.yaml >> o.yaml
 sed -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  orchestrator.yaml | kubectl -n eks-saga create -f -
+  o.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Audit microservice
@@ -186,9 +191,12 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
   -e 's/dbEndpoint/'"${DB_ENDPOINT}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
+yq r -d0 audit.yaml >> a.yaml
+echo '---' >> a.yaml
+yq r -d1 audit.yaml >> a.yaml  
 sed -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  audit.yaml | kubectl -n eks-saga create -f -
+  a.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Trail microservice
@@ -199,14 +207,45 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/dbEndpoint/'"${DB_ENDPOINT}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
+yq r -d0 trail.yaml >> t.yaml
+echo '---' >> t.yaml
+yq r -d1 trail.yaml >> t.yaml
 sed -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  trail.yaml | kubectl -n eks-saga create -f -
+  t.yaml | kubectl -n eks-saga create -f -
 cd
 
-## Set retention period for log groups of Container Insights
+### Sleeping 30s so that Ingress object could be created.
+### See https://github.com/kubernetes-sigs/aws-load-balancer-controller/issues/2013
+echo 'Sleeping 30s so that Ingress objects could be created next.'
 sleep 30
 
+echo 'Creating Ingress for Orders microservice'
+cd amazon-eks-saga-orchestration-orders/yaml
+yq r -d2 orders.yaml | kubectl -n eks-saga create -f -
+cd
+
+echo 'Creating Ingress for Inventory microservice'
+cd amazon-eks-saga-orchestration-inventory/yaml
+yq r -d2 inventory.yaml | kubectl -n eks-saga create -f -
+cd
+
+echo 'Creating Ingress for Orchestrator microservice'
+cd amazon-eks-saga-orchestration-orchestrator/yaml
+yq r -d2 orchestrator.yaml | kubectl -n eks-saga create -f -
+cd
+
+echo 'Creating Ingress for Audit microservice'
+cd amazon-eks-saga-orchestration-audit/yaml
+yq r -d2 audit.yaml | kubectl -n eks-saga create -f -
+cd
+
+echo 'Creating Ingress for Trail microservice'
+cd amazon-eks-saga-orchestration-trail/yaml
+yq r -d2 trail.yaml | kubectl -n eks-saga create -f -
+cd
+
+echo 'Setting retention periods for CloudWatch log groups'
 LOG_GROUP_NAME=/aws/containerinsights/${EKS_CLUSTER}/application
 LOG_GROUP_ARN=`aws logs describe-log-groups --log-group-name-prefix ${LOG_GROUP_NAME} --query 'logGroups[0].arn' --output text`
 if [ ${LOG_GROUP_ARN} == 'None' ]
