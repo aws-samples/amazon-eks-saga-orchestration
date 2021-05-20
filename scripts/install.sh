@@ -43,6 +43,7 @@ sudo mv jq /usr/local/bin
 VERSION=v4.9.1
 BINARY=yq_linux_amd64
 sudo wget https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY} -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
+yq -V
 
 ### AWS CLI
 echo 'Uninstalling AWS CLI 1 and installing AWS CLI 2'
@@ -162,7 +163,18 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
 
 yq e 'select(di == 0)' inventory.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
-yq e 'select(di == 1)' inventory.yaml | kubectl -n eks-saga create -f -
+cd
+
+### Orders rollback microservice
+echo 'Deploying Orders rollback microservice'
+git clone ${GIT_URL}/amazon-eks-saga-ordersrb
+cd amazon-eks-saga-orchestration-ordersrb/yaml
+sed -e 's#timeZone#Asia/Kolkata#g' \
+  -e 's/regionId/'"${REGION_ID}"'/g' \
+  -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
+  cfgmap.yaml | kubectl -n eks-saga create -f -
+
+yq e 'select(di == 0)' ordersrb.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
 cd
 
 ### Orchestrator microservice
@@ -175,7 +187,6 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
 
 yq e 'select(di == 0)' orchestrator.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
-yq e 'select(di == 1)' orchestrator.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Audit microservice
@@ -189,7 +200,6 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
 
 yq e 'select(di == 0)' audit.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
-yq e 'select(di == 1)' audit.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Trail microservice
@@ -213,21 +223,6 @@ sleep 30
 echo 'Creating Ingress for Orders microservice'
 cd amazon-eks-saga-orchestration-orders/yaml
 yq e 'select(di == 2)' orders.yaml | kubectl -n eks-saga create -f -
-cd
-
-echo 'Creating Ingress for Inventory microservice'
-cd amazon-eks-saga-orchestration-inventory/yaml
-yq e 'select(di == 2)' inventory.yaml | kubectl -n eks-saga create -f -
-cd
-
-echo 'Creating Ingress for Orchestrator microservice'
-cd amazon-eks-saga-orchestration-orchestrator/yaml
-yq e 'select(di == 2)' orchestrator.yaml | kubectl -n eks-saga create -f -
-cd
-
-echo 'Creating Ingress for Audit microservice'
-cd amazon-eks-saga-orchestration-audit/yaml
-yq e 'select(di == 2)' audit.yaml | kubectl -n eks-saga create -f -
 cd
 
 echo 'Creating Ingress for Trail microservice'
