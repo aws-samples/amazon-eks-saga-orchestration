@@ -39,6 +39,11 @@ wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O jq
 chmod +x jq
 sudo mv jq /usr/local/bin
 
+### yq
+VERSION=v4.9.1
+BINARY=yq_linux_amd64
+wget https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY} -O /usr/bin/yq && chmod +x /usr/bin/yq
+
 ### AWS CLI
 echo 'Uninstalling AWS CLI 1 and installing AWS CLI 2'
 sudo pip uninstall -y awscli
@@ -141,12 +146,9 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
   -e 's/dbEndpoint/'"${DB_ENDPOINT}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
-yq r -d0 orders.yaml >> o.yaml
-echo '---' >> o.yaml
-yq r -d1 orders.yaml >> o.yaml
-sed -e 's/regionId/'"${REGION_ID}"'/g' \
-  -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  o.yaml | kubectl -n eks-saga create -f -
+
+yq e 'select(di == 0)' orders.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
+yq e 'select(di == 1)' orders.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Inventory microservice
@@ -158,12 +160,9 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
   -e 's/dbEndpoint/'"${DB_ENDPOINT}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
-yq r -d0 inventory.yaml >> i.yaml
-echo '---' >> i.yaml
-yq r -d1 inventory.yaml >> i.yaml
-sed -e 's/regionId/'"${REGION_ID}"'/g' \
-  -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  i.yaml | kubectl -n eks-saga create -f -
+
+yq e 'select(di == 0)' inventory.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
+yq e 'select(di == 1)' inventory.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Orchestrator microservice
@@ -174,12 +173,9 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
-yq r -d0 orchestrator.yaml >> o.yaml
-echo '---' >> o.yaml
-yq r -d1 orchestrator.yaml >> o.yaml
-sed -e 's/regionId/'"${REGION_ID}"'/g' \
-  -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  o.yaml | kubectl -n eks-saga create -f -
+
+yq e 'select(di == 0)' orchestrator.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
+yq e 'select(di == 1)' orchestrator.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Audit microservice
@@ -191,12 +187,9 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
   -e 's/dbEndpoint/'"${DB_ENDPOINT}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
-yq r -d0 audit.yaml >> a.yaml
-echo '---' >> a.yaml
-yq r -d1 audit.yaml >> a.yaml  
-sed -e 's/regionId/'"${REGION_ID}"'/g' \
-  -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  a.yaml | kubectl -n eks-saga create -f -
+
+yq e 'select(di == 0)' audit.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
+yq e 'select(di == 1)' audit.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Trail microservice
@@ -207,12 +200,9 @@ sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/dbEndpoint/'"${DB_ENDPOINT}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
-yq r -d0 trail.yaml >> t.yaml
-echo '---' >> t.yaml
-yq r -d1 trail.yaml >> t.yaml
-sed -e 's/regionId/'"${REGION_ID}"'/g' \
-  -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
-  t.yaml | kubectl -n eks-saga create -f -
+
+yq e 'select(di == 0)' trail.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
+yq e 'select(di == 1)' trail.yaml | kubectl -n eks-saga create -f -
 cd
 
 ### Sleeping 30s so that Ingress object could be created.
@@ -222,27 +212,27 @@ sleep 30
 
 echo 'Creating Ingress for Orders microservice'
 cd amazon-eks-saga-orchestration-orders/yaml
-yq r -d2 orders.yaml | kubectl -n eks-saga create -f -
+yq e 'select(di == 2)' orders.yaml | kubectl -n eks-saga create -f -
 cd
 
 echo 'Creating Ingress for Inventory microservice'
 cd amazon-eks-saga-orchestration-inventory/yaml
-yq r -d2 inventory.yaml | kubectl -n eks-saga create -f -
+yq e 'select(di == 2)' inventory.yaml | kubectl -n eks-saga create -f -
 cd
 
 echo 'Creating Ingress for Orchestrator microservice'
 cd amazon-eks-saga-orchestration-orchestrator/yaml
-yq r -d2 orchestrator.yaml | kubectl -n eks-saga create -f -
+yq e 'select(di == 2)' orchestrator.yaml | kubectl -n eks-saga create -f -
 cd
 
 echo 'Creating Ingress for Audit microservice'
 cd amazon-eks-saga-orchestration-audit/yaml
-yq r -d2 audit.yaml | kubectl -n eks-saga create -f -
+yq e 'select(di == 2)' audit.yaml | kubectl -n eks-saga create -f -
 cd
 
 echo 'Creating Ingress for Trail microservice'
 cd amazon-eks-saga-orchestration-trail/yaml
-yq r -d2 trail.yaml | kubectl -n eks-saga create -f -
+yq e 'select(di == 2)' trail.yaml | kubectl -n eks-saga create -f -
 cd
 
 echo 'Setting retention periods for CloudWatch log groups'
