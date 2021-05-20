@@ -42,7 +42,7 @@ sudo mv jq /usr/local/bin
 ### yq
 VERSION=v4.9.1
 BINARY=yq_linux_amd64
-wget https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY} -O /usr/bin/yq && chmod +x /usr/bin/yq
+sudo wget https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY} -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
 ### AWS CLI
 echo 'Uninstalling AWS CLI 1 and installing AWS CLI 2'
