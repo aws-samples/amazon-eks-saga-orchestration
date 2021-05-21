@@ -167,8 +167,8 @@ cd
 
 ### Orders rollback microservice
 echo 'Deploying Orders rollback microservice'
-git clone ${GIT_URL}/amazon-eks-saga-ordersrb
-cd amazon-eks-saga-orchestration-ordersrb/yaml
+git clone ${GIT_URL}/amazon-eks-saga-orchestration-orders-rb
+cd amazon-eks-saga-orchestration-orders-rb/yaml
 sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
@@ -279,6 +279,7 @@ rm -rf $HOME/amazon-eks-saga-orchestration-db
 rm -rf $HOME/amazon-eks-saga-orchestration-inventory
 rm -rf $HOME/amazon-eks-saga-orchestration-orchestrator
 rm -rf $HOME/amazon-eks-saga-orchestration-orders
+rm -rf $HOME/amazon-eks-saga-orchestration-orders-rb
 rm -rf $HOME/amazon-eks-saga-orchestration-trail
 
 echo 'All done!'
