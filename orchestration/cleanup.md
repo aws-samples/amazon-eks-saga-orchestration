@@ -14,12 +14,8 @@ An AWS account with full admininstrator access - _not_ the root account - should
 
 ## Clean-up
 
-1. Launch a Cloud9 workspace as described [here](https://www.eksworkshop.com/020_prerequisites/workspace/). You may choose any name for the workshop.
-2. Increase the disk size of the workspace as described [here](https://www.eksworkshop.com/020_prerequisites/workspace/#increase-the-disk-size-on-the-cloud9-instance).
-3. Disable temporary credentials as described [here](https://www.eksworkshop.com/020_prerequisites/workspaceiam/).
-4. Create new IAM role for your workspave as described [here](https://www.eksworkshop.com/020_prerequisites/iamrole/).
-5. Attach new IAM role for your workspave as described [here](https://www.eksworkshop.com/020_prerequisites/ec2instance/).
-6. Change `regionId` and `accountId` as applicable in the commands below. Do **NOT** change the third argument (`https://github.com/aws-samples`). Open terminal and run the commands.
+1. Log on to the Cloud9 instance launched for installation.
+2. Change `regionId` and `accountId` as applicable in the commands below. Do **NOT** change the third argument (`https://github.com/aws-samples`). Open terminal and run the commands.
 
 ```bash
 cd
@@ -28,7 +24,7 @@ cd amazon-eks-saga-orchestration/scripts
 ./cleanup.sh regionId accountId https://github.com/aws-samples
 ```
 
-7. Terminate your Cloud9 instance.
+3. Terminate your Cloud9 instance.
 
 You can also browse the instructions for each repository as listed below.
 
