@@ -28,8 +28,6 @@ cd amazon-eks-saga-orchestration/scripts
 ./install.sh regionId accountId https://github.com/aws-samples
 ```
 
-7. Terminate your Cloud9 instance.
-
 You can also browse the instructions for each repository as listed below.
 
 | Repository                                                                                           | Remarks                                   |
