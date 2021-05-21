@@ -172,6 +172,7 @@ cd amazon-eks-saga-orchestration-orders-rb/yaml
 sed -e 's#timeZone#Asia/Kolkata#g' \
   -e 's/regionId/'"${REGION_ID}"'/g' \
   -e 's/accountId/'"${ACCOUNT_ID}"'/g' \
+  -e 's/dbEndpoint/'"${DB_ENDPOINT}"'/g' \
   cfgmap.yaml | kubectl -n eks-saga create -f -
 
 yq e 'select(di == 0)' ordersrb.yaml | sed -e 's/regionId/'"${REGION_ID}"'/g' -e 's/accountId/'"${ACCOUNT_ID}"'/g' - | kubectl -n eks-saga create -f -
